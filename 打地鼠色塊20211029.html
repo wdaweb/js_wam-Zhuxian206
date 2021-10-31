@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Martel', serif;
+
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: rgb(31, 20, 0);
+    }
+
+    .container {
+      width: 640px;
+      border: 5px solid salmon;
+      display: flex;
+      border-radius: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cir {
+      position: relative;
+      border-radius: 5px;
+      width: 200px;
+      height: 200px;
+      background: #4B385E;
+      margin: 5px;
+    }
+
+    .hole {
+      position: absolute;
+      top: calc(50% - 100px);
+      left: calc(50% - 100px);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 100px 100px;
+      border-radius: 100px;
+      border-color: rgba(0, 127, 148, 1) rgba(0, 0, 0, 0) rgb(194, 43, 38, 1) rgba(0, 0, 0, 0);
+      transform: rotate(0deg);
+    }
+
+    .tr2 {
+      position: absolute;
+      top: calc(50% - 100px);
+      left: calc(50% - 100px);
+      transform: rotate(0deg);
+
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 100px 100px;
+      border-radius: 100px;
+      border-color: rgba(238, 215, 141, 1) rgba(0, 0, 0, 0) rgba(255, 182, 50, 1) rgba(0, 0, 0, 0);
+    }
+
+
+    .red {
+      border-color: rgba(0, 127, 148, 1) rgba(0, 0, 0, 0) rgba(194, 43, 38, 1) rgba(0, 0, 0, 0);
+      transition: 1.5s;
+      animation: turn 1.5s infinite;
+      z-index: 20;
+    }
+
+    .blue {
+      border-color: rgba(0, 127, 148, 1) rgba(0, 0, 0, 0) rgb(0, 127, 148, 1) rgba(0, 0, 0, 0);
+      animation: turn2 1.5s;
+      z-index: 20;
+    }
+
+    @keyframes turn {
+      0% {
+        opacity: 0;
+      }
+
+      40% {
+        opacity: 1;
+
+      }
+
+      100% {
+        transform: rotate(90deg);
+      }
+    }
+
+    @keyframes turn2 {
+      40% {
+        opacity: 1;
+      }
+
+      70% {
+        transform: rotate(180deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotate(180deg);
+      }
+    }
+
+    #game {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    #start {
+      background: rgb(109, 109, 109);
+      font-size: 1rem;
+      width: 100px;
+      height: 35px;
+      padding: 5px;
+      border: 1px solid rgb(143, 90, 30);
+      border-radius: 10px;
+      color: wheat;
+      font-weight: bold;
+      margin-top: 50px;
+    }
+
+    p {
+      color: burlywood;
+    }
+
+    hr {
+      border: 1px solid burlywood;
+      width: 70%;
+    }
+
+    .block {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="game">
+    <div class="cir">
+      <div class="hole" id="hole7"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole8"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole9"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole4"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole5"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole6"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole1"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole2"></div>
+      <div class="tr2"></div>
+    </div>
+    <div class="cir">
+      <div class="hole" id="hole3"></div>
+      <div class="tr2"></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <input type="button" value="開始遊戲" id="start">
+    <br>
+    <p> 目前分數： <span id="score">0</span> </p>
+    <br>
+
+    <hr>
+
+    <br>
+    <p>最高分玩家： <span id="highname">???</span></p>
+    <br>
+    <p>分數： <span id="highscore">0</span></p>
+  </div>
+
+  <script>
+    const holes = document.getElementsByClassName('hole')
+    const start = document.getElementById('start')
+    const scoreText = document.getElementById('score')
+    const highnameText = document.getElementById('highname')
+    const highscoreText = document.getElementById('highscore')
+
+    const high = { score: 0, name: '???' }
+
+    let score = 0
+    let timer = 0
+
+    const audio = new Audio()
+
+    const storage = JSON.parse(localStorage.getItem('circle'))
+
+    if (storage) {
+      high.name = storage.name
+      high.score = storage.score
+      highnameText.innerText = high.name
+      highscoreText.innerText = high.score
+    }
+
+    start.onclick = () => {
+      start.disabled = true
+      score = 0
+      scoreText.innerText = score
+      timer = setInterval(game, 1500)
+      game()
+      setTimeout(end, 10 * 1500)
+    }
+
+    const game = () => {
+      for (const hole of holes) {
+        hole.classList.remove('red')
+        hole.classList.remove('blue')
+      }
+
+      for (let i = 0; i < 3; i++) {
+        holes[Math.round(Math.random() * (holes.length - 1))].classList.add('red')
+      }
+    }
+
+    const end = () => {
+      clearInterval(timer)
+      for (const hole of holes) {
+        hole.classList.remove('red')
+        hole.classList.remove('blue')
+      }
+      start.disabled = false
+      alert(`遊戲結束，你得到 ${score} 分`)
+      if (score > high.score) {
+        audio.src = './Audience applause sound effect (128 kbps).mp3'
+        audio.play()
+        const input = prompt('最高分，請輸入名字')
+        high.score = score
+        high.name = input || '???'
+        highnameText.innerText = high.name
+        highscoreText.innerText = high.score
+        localStorage.setItem('circle', JSON.stringify(high))
+      }
+    }
+    for (const hole of holes) {
+      hole.onclick = () => {
+        if (hole.classList.contains('red')) {
+          hole.classList.replace('red', 'blue')
+          score++
+          scoreText.innerText = score
+        }
+      }
+    }
+    document.onkeydown = event => {
+      const key = event.key
+      if (!isNaN(key)) {
+        const target = document.getElementById(`hole${key}`)
+        if (target && target.classList.contains('red')) {
+          target.classList.replace('red', 'blue')
+          score++
+          scoreText.innerText = score
+        }
+      }
+    }
+  </script>
+</body>
+
+
+</html>
